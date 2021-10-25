@@ -1,12 +1,10 @@
 spring:
   application:
     name: resource-service
-  
-server:  port: 0
-
+server:  port: 0  servlet:    context-path: /resource-service
 eureka:
   instance:
-    instance-id: ${spring.application.name}:${random.int}    prefer-ip-address: true  client:    register-with-eureka: true 
+    instance-id: ${spring.application.name}:${random.int}  client:    register-with-eureka: true 
     fetch-registry: true    
     service-url:      defaultZone: http://localhost:8761/eureka
 
