@@ -15,26 +15,29 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secret;
+	@Value("${jwt.secret}")
+	private String secret;
 
-    private Key key;
+	private Key key;
 
-    @PostConstruct
-    public void init(){
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-    }
+	@PostConstruct
+	public void init() {
+		this.key = Keys.hmacShaKeyFor(secret.getBytes());
+	}
 
-    public Claims getAllClaimsFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-    }
+	public Claims getAllClaimsFromToken(String token) {
+		return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+	}
 
-    private boolean isTokenExpired(String token) {
-        return this.getAllClaimsFromToken(token).getExpiration().before(new Date());
-    }
+	private boolean isTokenExpired(String token) {
+		return this.getAllClaimsFromToken(token).getExpiration().before(new Date());
+	}
 
-    public boolean isInvalid(String token) {
-        return this.isTokenExpired(token);
-    }
+	public boolean isInvalid(String token) {
+		if (token.contains("Bearer "))
+			return this.isTokenExpired(token.split("Bearer ")[1]);
+		return true;
+
+	}
 
 }
